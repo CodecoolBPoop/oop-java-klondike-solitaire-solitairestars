@@ -95,7 +95,7 @@ public class Game extends Pane {
             handleValidMove(card, pile);
         } else {
             draggedCards.forEach(MouseUtil::slideBack);
-            draggedCards = null;
+            draggedCards.clear();
         }
     };
 
@@ -176,7 +176,7 @@ public class Game extends Pane {
         }
     }
     public boolean isMoveValid(Card card, Pile destPile) {
-        if (card.isOppositeColor(card, destPile.getTopCard())){
+        if (card.isOppositeColor(card, destPile.getTopCard()) && card.getRank() == destPile.getTopCard().getRank()-1){
         return true;
     }
     return false;
