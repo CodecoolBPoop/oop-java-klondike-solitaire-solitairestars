@@ -167,8 +167,10 @@ public class Game extends Pane {
         }
     }
     public boolean isMoveValid(Card card, Pile destPile) {
-        //TODO
+        if (card.isOppositeColor(card, destPile.getTopCard())){
         return true;
+    }
+    return false;
     }
     private Pile getValidIntersectingPile(Card card, List<Pile> piles) {
         Pile result = null;
@@ -238,7 +240,7 @@ public class Game extends Pane {
 
     public void dealCards() {
         Iterator<Card> deckIterator = deck.iterator();
-        //TODO
+
         deckIterator.forEachRemaining(card -> {
             stockPile.addCard(card);
             addMouseEventHandlers(card);
