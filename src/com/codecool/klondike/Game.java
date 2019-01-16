@@ -32,6 +32,7 @@ public class Game extends Pane {
     private List<Card> draggedCards = FXCollections.observableArrayList();
 
     private static double STOCK_GAP = 1;
+    private static double DISCARD_GAP = 0;
     private static double FOUNDATION_GAP = 0;
     private static double TABLEAU_GAP = 30;
 
@@ -159,7 +160,7 @@ public class Game extends Pane {
                 stockPile.addCard(card);
             }
             discardPile = null;
-            discardPile = new Pile(Pile.PileType.DISCARD, "Discard", STOCK_GAP);
+            discardPile = new Pile(Pile.PileType.DISCARD, "Discard", DISCARD_GAP);
             discardPile.setBlurredBackground();
             discardPile.setLayoutX(285);
             discardPile.setLayoutY(20);
@@ -212,7 +213,7 @@ public class Game extends Pane {
         stockPile.setOnMouseClicked(stockReverseCardsHandler);
         getChildren().add(stockPile);
 
-        discardPile = new Pile(Pile.PileType.DISCARD, "Discard", STOCK_GAP);
+        discardPile = new Pile(Pile.PileType.DISCARD, "Discard", DISCARD_GAP);
         discardPile.setBlurredBackground();
         discardPile.setLayoutX(285);
         discardPile.setLayoutY(20);
@@ -230,7 +231,7 @@ public class Game extends Pane {
             Pile tableauPile = new Pile(Pile.PileType.TABLEAU, "Tableau " + i, TABLEAU_GAP);
             tableauPile.setBlurredBackground();
             tableauPile.setLayoutX(95 + i * 180);
-            tableauPile.setLayoutY(275);
+            tableauPile.setLayoutY(325);
             tableauPiles.add(tableauPile);
             getChildren().add(tableauPile);
         }
