@@ -168,8 +168,10 @@ public class Game extends Pane {
         }
     }
     public boolean isMoveValid(Card card, Pile destPile) {
-        //TODO
+        if (card.isOppositeColor(card, destPile.getTopCard())){
         return true;
+    }
+    return false;
     }
     private Pile getValidIntersectingPile(Card card, List<Pile> piles) {
         Pile result = null;
@@ -237,16 +239,38 @@ public class Game extends Pane {
         }
     }
 
+
+    public void fillTableauPiles() {
+
+        Card card;
+
+        for (int i = 0; i < tableauPiles.size(); i++) {
+            for (int j = 0; j < i+1; j++) {
+                card = stockPile.getTopCard();
+                card.moveToPile(tableauPiles.get(i));
+                if(j == i ) {
+                    card.flip();
+                }
+            }
+        }
+    }
+
     public void dealCards() {
         Iterator<Card> deckIterator = deck.iterator();
-        //TODO
+        stockPile.clear();
+        discardPile.clear();
+        for (int i = 0; i < tableauPiles.size() ; i++) {
+            tableauPiles.get(i).clear();
+
+        }
         deckIterator.forEachRemaining(card -> {
             stockPile.addCard(card);
             addMouseEventHandlers(card);
             getChildren().add(card);
         });
-
+        fillTableauPiles();
     }
+
 
     public void setTableBackground(Image tableBackground) {
         setBackground(new Background(new BackgroundImage(tableBackground,
