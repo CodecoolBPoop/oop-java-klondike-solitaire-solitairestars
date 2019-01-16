@@ -104,7 +104,7 @@ public class Game extends Pane {
         addRestartButtonEventHandlers();
 
         //System.out.println(stockPile.getCards());
-        // System.out.println(Card.isOppositeColor(stockPile.getCards().get(1), stockPile.getCards().get(30)));
+        //System.out.println(Card.isOppositeColor(stockPile.getCards().get(1), stockPile.getCards().get(30)));
 
     }
 
@@ -125,6 +125,13 @@ public class Game extends Pane {
             }
         }
 
+        stockPile = null;
+        stockPile = new Pile(Pile.PileType.STOCK, "Stock", STOCK_GAP);
+        stockPile.setBlurredBackground();
+        stockPile.setLayoutX(95);
+        stockPile.setLayoutY(20);
+        stockPile.setOnMouseClicked(stockReverseCardsHandler);
+        getChildren().add(stockPile);
         deck = Card.createNewDeck();
         Collections.shuffle(deck);
         dealCards();
