@@ -95,14 +95,15 @@ public class Game extends Pane {
 
         if (pile != null) {
 
-            if (previousPile.getCards().size() == 1){
-                handleValidMove(card, pile);
-            }
-            else{
+            if (previousPile.getCards().size() != 1 && previousPile.getPileType().equals(Pile.PileType.TABLEAU)){
                 Card previousCard = previousPile.getBeforeTopCard();
                 handleValidMove(card, pile);
                 previousCard.flip();
 
+            }
+            else{
+
+                handleValidMove(card, pile);
             }
 
         } else {
