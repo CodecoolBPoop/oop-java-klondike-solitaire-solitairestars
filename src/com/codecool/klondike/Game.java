@@ -2,6 +2,7 @@ package com.codecool.klondike;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -196,8 +197,10 @@ public class Game extends Pane {
 
 
     public void refillStockFromDiscard() {
+        List<Card> list = discardPile.getCards();
+        Collections.reverse(list);
         if (stockPile.isEmpty()) {
-            for (Card card : discardPile.getCards()) {
+            for (Card card : list) {
                 card.flip();
                 stockPile.addCard(card);
             }
