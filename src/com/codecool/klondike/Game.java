@@ -5,6 +5,8 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
@@ -19,6 +21,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
+import javafx.scene.control.Button;
+import javafx.scene.layout.HBox;
 
 public class Game extends Pane {
 
@@ -39,6 +44,26 @@ public class Game extends Pane {
     private static double TABLEAU_GAP = 30;
 
     Button restartBtn = new Button("Restart");
+    Button winBtn = new Button("Instant win");
+
+
+
+
+    public static void infoBox(String infoMessage, String titleBar)
+    {
+        /* By specifying a null headerMessage String, we cause the dialog to
+           not have a header */
+        infoBox(infoMessage, titleBar, null);
+    }
+
+    public static void infoBox(String infoMessage, String titleBar, String headerMessage)
+    {
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle(titleBar);
+        alert.setHeaderText(headerMessage);
+        alert.setContentText(infoMessage);
+        alert.showAndWait();
+    }
 
 
     private EventHandler<MouseEvent> onMouseClickedHandler = e -> {
@@ -138,9 +163,16 @@ public class Game extends Pane {
         deck = Card.createNewDeck();
         Collections.shuffle(deck);
         getChildren().add(restartBtn);
+        getChildren().add(winBtn);
         initPiles();
         dealCards();
         addRestartButtonEventHandlers();
+        addWinButtonEventHandlers();
+
+        if(isGameWon()){
+            Game.infoBox("You won the game!", "Hurraaay!");
+        }
+
 
     }
 
@@ -177,6 +209,10 @@ public class Game extends Pane {
         dealCards();
     }
 
+    private void winTheGame() {
+        Game.infoBox("You won the game!", "Hurraaay!");
+    }
+
 
     public void addMouseEventHandlers(Card card) {
         card.setOnMousePressed(onMousePressedHandler);
@@ -190,6 +226,11 @@ public class Game extends Pane {
     public void addRestartButtonEventHandlers() {
         restartBtn.setOnAction((event -> restartGame()));
     }
+
+    public void addWinButtonEventHandlers() {
+        winBtn.setOnAction((event -> winTheGame()));
+    }
+
 
 
     public void refillStockFromDiscard() {
