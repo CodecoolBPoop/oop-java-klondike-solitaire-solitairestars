@@ -2,6 +2,7 @@ package com.codecool.klondike;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -66,7 +67,7 @@ public class Game extends Pane {
     private EventHandler<MouseEvent> onMouseDraggedHandler = e -> {
         Card card = (Card) e.getSource();
         Pile activePile = card.getContainingPile();
-        Card previousCard = card.getContainingPile().getTopCard();
+
         if (card == activePile.getTopCard() || !card.isFaceDown()) {
 
             if (activePile.getPileType() == Pile.PileType.STOCK)
@@ -141,9 +142,6 @@ public class Game extends Pane {
         dealCards();
         addRestartButtonEventHandlers();
 
-        //System.out.println(stockPile.getCards());
-        //System.out.println(Card.isOppositeColor(stockPile.getCards().get(1), stockPile.getCards().get(30)));
-
     }
 
     private void restartGame() {
@@ -173,7 +171,6 @@ public class Game extends Pane {
         stockPile.setBlurredBackground();
         stockPile.setLayoutX(95);
         stockPile.setLayoutY(20);
-        stockPile.setOnMouseClicked(stockReverseCardsHandler);
         getChildren().add(stockPile);
         deck = Card.createNewDeck();
         Collections.shuffle(deck);
@@ -196,8 +193,10 @@ public class Game extends Pane {
 
 
     public void refillStockFromDiscard() {
+        List<Card> list = discardPile.getCards();
+        Collections.reverse(list);
         if (stockPile.isEmpty()) {
-            for (Card card : discardPile.getCards()) {
+            for (Card card : list) {
                 card.flip();
                 stockPile.addCard(card);
             }
@@ -213,10 +212,12 @@ public class Game extends Pane {
             if (destPile.isEmpty() && card.getRank() == 13) {
                 return true;
             }
-            if (card.isOppositeColor(card, destPile.getTopCard()) && card.getRank() == destPile.getTopCard().getRank() - 1) {
-                return true;
+            if (!destPile.isEmpty()) {
+                if (card.isOppositeColor(card, destPile.getTopCard()) && card.getRank() == destPile.getTopCard().getRank() - 1) {
+                    return true;
+                }
+                return false;
             }
-            return false;
         }
 
         if (destPile.getPileType().equals(Pile.PileType.FOUNDATION)) {
