@@ -48,7 +48,6 @@ public class Pile extends Pane {
     }
 
     public void clear() {
-        //TODO
         cards.clear();
     }
 
@@ -72,6 +71,13 @@ public class Pile extends Pane {
             return null;
         else
             return cards.get(cards.size() - 1);
+    }
+
+    public Card getBeforeTopCard() {
+        if (cards.isEmpty())
+            return null;
+        else
+            return cards.get(cards.size() - 2);
     }
 
     public void setBlurredBackground() {

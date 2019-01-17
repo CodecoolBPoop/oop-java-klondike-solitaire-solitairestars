@@ -14,10 +14,7 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class Game extends Pane {
 
@@ -90,10 +87,6 @@ public class Game extends Pane {
             return;
         Card card = (Card) e.getSource();
         Pile pile = getValidIntersectingPile(card, tableauPiles);
-        if (pile.getPileType().equals(Pile.PileType.FOUNDATION)){
-            handleValidMove(card, pile);
-
-        }
         if (pile != null) {
             handleValidMove(card, pile);
         } else {
@@ -103,8 +96,8 @@ public class Game extends Pane {
     };
 
     public boolean isGameWon() {
-        if (foundationPiles.size() == 52){
-                return true;
+        if (foundationPiles.size() == 52) {
+            return true;
         }
         return false;
     }
@@ -117,34 +110,31 @@ public class Game extends Pane {
         dealCards();
         addRestartButtonEventHandlers();
 
-        //System.out.println(stockPile.getCards());
-        //System.out.println(Card.isOppositeColor(stockPile.getCards().get(1), stockPile.getCards().get(30)));
-
     }
 
     private void restartGame() {
 
-        for (Card card:stockPile.getCards()) {
+        for (Card card : stockPile.getCards()) {
             getChildren().remove(card);
 
         }
 
-        for (Card card:discardPile.getCards()) {
+        for (Card card : discardPile.getCards()) {
             getChildren().remove(card);
         }
 
-        for (int i = 0; i< tableauPiles.size(); i++) {
-            for (Card card: tableauPiles.get(i).getCards()) {
+        for (int i = 0; i < tableauPiles.size(); i++) {
+            for (Card card : tableauPiles.get(i).getCards()) {
                 getChildren().remove(card);
             }
         }
 
-        stockPile = null;
         stockPile = new Pile(Pile.PileType.STOCK, "Stock", STOCK_GAP);
         stockPile.setBlurredBackground();
         stockPile.setLayoutX(95);
         stockPile.setLayoutY(20);
-        stockPile.setOnMouseClicked(stockReverseCardsHandler);
+        stockPile.setOnMouseClicked
+                (stockReverseCardsHandler);
         getChildren().add(stockPile);
         deck = Card.createNewDeck();
         Collections.shuffle(deck);
@@ -172,20 +162,30 @@ public class Game extends Pane {
                 card.flip();
                 stockPile.addCard(card);
             }
-            discardPile = null;
-            discardPile = new Pile(Pile.PileType.DISCARD, "Discard", DISCARD_GAP);
-            discardPile.setBlurredBackground();
-            discardPile.setLayoutX(285);
-            discardPile.setLayoutY(20);
+            discardPile.clear();
 
         }
     }
+
     public boolean isMoveValid(Card card, Pile destPile) {
-        if (card.isOppositeColor(card, destPile.getTopCard()) && card.getRank() == destPile.getTopCard().getRank()-1){
-        return true;
-    }
-    return false;
-    }
+
+        if (destPile.getPileType().equals(Pile.PileType.TABLEAU)) {
+
+            if (destPile.isEmpty()) {
+                if (card.getRank() == 13) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            if (card.isOppositeColor(card, destPile.getTopCard()) && card.getRank() == destPile.getTopCard().getRank() - 1) {
+                return true;
+            }
+        }
+        return false;
+        }
+
+
     private Pile getValidIntersectingPile(Card card, List<Pile> piles) {
         Pile result = null;
         for (Pile pile : piles) {
