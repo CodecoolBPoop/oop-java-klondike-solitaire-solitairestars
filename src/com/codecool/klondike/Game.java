@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.application.Platform;
@@ -43,8 +44,10 @@ public class Game extends Pane {
     private static double FOUNDATION_GAP = 0;
     private static double TABLEAU_GAP = 30;
 
-    Button restartBtn = new Button("Restart");
+    Button restartBtn = new Button("  Restart  ");
     Button winBtn = new Button("Instant win");
+
+
 
 
 
@@ -93,7 +96,7 @@ public class Game extends Pane {
         Card card = (Card) e.getSource();
         Pile activePile = card.getContainingPile();
 
-        if (card == activePile.getTopCard() || !card.isFaceDown()) {
+        if (card == activePile.getTopCard()) {
 
             if (activePile.getPileType() == Pile.PileType.STOCK)
                 return;
@@ -169,6 +172,7 @@ public class Game extends Pane {
         addRestartButtonEventHandlers();
         addWinButtonEventHandlers();
 
+        winBtn.setLayoutY(750);
         if(isGameWon()){
             Game.infoBox("You won the game!", "Hurraaay!");
         }
@@ -199,11 +203,11 @@ public class Game extends Pane {
             }
         }
 
-        stockPile = new Pile(Pile.PileType.STOCK, "Stock", STOCK_GAP);
-        stockPile.setBlurredBackground();
-        stockPile.setLayoutX(95);
-        stockPile.setLayoutY(20);
-        getChildren().add(stockPile);
+//        stockPile = new Pile(Pile.PileType.STOCK, "Stock", STOCK_GAP);
+//        stockPile.setBlurredBackground();
+//        stockPile.setLayoutX(95);
+//        stockPile.setLayoutY(20);
+//        getChildren().add(stockPile);
         deck = Card.createNewDeck();
         Collections.shuffle(deck);
         dealCards();
@@ -211,6 +215,7 @@ public class Game extends Pane {
 
     private void winTheGame() {
         Game.infoBox("You won the game!", "Hurraaay!");
+        restartGame();
     }
 
 
