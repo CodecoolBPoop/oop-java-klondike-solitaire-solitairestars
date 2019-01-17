@@ -90,8 +90,21 @@ public class Game extends Pane {
             return;
         Card card = (Card) e.getSource();
         Pile pile = getValidIntersectingPile(card, tableauPiles);
+        Pile previousPile = card.getContainingPile();
+
+
         if (pile != null) {
-            handleValidMove(card, pile);
+
+            if (previousPile.getCards().size() == 1){
+                handleValidMove(card, pile);
+            }
+            else{
+                Card previousCard = previousPile.getBeforeTopCard();
+                handleValidMove(card, pile);
+                previousCard.flip();
+
+            }
+
         } else {
             draggedCards.forEach(MouseUtil::slideBack);
             draggedCards.clear();
