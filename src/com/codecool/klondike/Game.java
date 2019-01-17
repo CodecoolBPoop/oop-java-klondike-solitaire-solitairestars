@@ -30,6 +30,7 @@ public class Game extends Pane {
 
     private double dragStartX, dragStartY;
     private List<Card> draggedCards = FXCollections.observableArrayList();
+    private List<List<Pile>> validPiles = new ArrayList<>();
 
     private static double STOCK_GAP = 1;
     private static double DISCARD_GAP = 0;
@@ -69,7 +70,6 @@ public class Game extends Pane {
 
             if (activePile.getPileType() == Pile.PileType.STOCK)
                 return;
-
             double offsetX = e.getSceneX() - dragStartX;
             double offsetY = e.getSceneY() - dragStartY;
 
@@ -83,21 +83,23 @@ public class Game extends Pane {
             card.toFront();
             card.setTranslateX(offsetX);
             card.setTranslateY(offsetY);
-
         }
-
 
     };
 
     private EventHandler<MouseEvent> onMouseReleasedHandler = e -> {
+        validPiles.add(tableauPiles);
+        validPiles.add(foundationPiles);
+
         if (draggedCards.isEmpty())
             return;
         Card card = (Card) e.getSource();
-        Pile pile = getValidIntersectingPile(card, tableauPiles);
-        Pile previousPile = card.getContainingPile();
+
+            Pile pile = getValidIntersectingPile(card, validPiles);
+            Pile previousPile = card.getContainingPile();
 
 
-        if (pile != null) {
+            if (pile != null) {
 
             if (previousPile.getCards().size() != 1 && previousPile.getPileType().equals(Pile.PileType.TABLEAU)){
                 Card previousCard = previousPile.getBeforeTopCard();
@@ -110,16 +112,16 @@ public class Game extends Pane {
                 }
 
 
-            }
-            else{
+                } else {
 
-                handleValidMove(card, pile);
-            }
+                    handleValidMove(card, pile);
+                    draggedCards.clear();
+                }
 
-        } else {
-            draggedCards.forEach(MouseUtil::slideBack);
-            draggedCards.clear();
-        }
+            } else {
+                draggedCards.forEach(MouseUtil::slideBack);
+                draggedCards.clear();
+            }
     };
 
     public boolean isGameWon() {
@@ -155,6 +157,12 @@ public class Game extends Pane {
 
         for (int i = 0; i < tableauPiles.size(); i++) {
             for (Card card : tableauPiles.get(i).getCards()) {
+                getChildren().remove(card);
+            }
+        }
+
+        for (int i = 0; i < foundationPiles.size(); i++) {
+            for (Card card : foundationPiles.get(i).getCards()) {
                 getChildren().remove(card);
             }
         }
@@ -199,28 +207,43 @@ public class Game extends Pane {
 
         if (destPile.getPileType().equals(Pile.PileType.TABLEAU)) {
 
-            if (destPile.isEmpty()) {
-                if (card.getRank() == 13) {
-                    return true;
-                } else {
-                    return false;
-                }
+            if (destPile.isEmpty() && card.getRank() == 13) {
+                return true;
             }
             if (card.isOppositeColor(card, destPile.getTopCard()) && card.getRank() == destPile.getTopCard().getRank() - 1) {
                 return true;
             }
+            return false;
         }
+
+        if (destPile.getPileType().equals(Pile.PileType.FOUNDATION)) {
+
+            if (destPile.isEmpty() && card.getRank() == 1) {
+                return true;
+            }
+            if (!destPile.isEmpty()) {
+                if (card.getSuit()== destPile.getTopCard().getSuit() && card.getRank() == destPile.getTopCard().getRank() + 1) {
+                    return true;
+                }
+            }
+            return false;
+
+
+        }
+
         return false;
-        }
+    }
 
 
-    private Pile getValidIntersectingPile(Card card, List<Pile> piles) {
+    private Pile getValidIntersectingPile(Card card, List<List<Pile>> piles) {
         Pile result = null;
-        for (Pile pile : piles) {
-            if (!pile.equals(card.getContainingPile()) &&
-                    isOverPile(card, pile) &&
-                    isMoveValid(card, pile))
-                result = pile;
+        for (List<Pile> list : piles) {
+            for (Pile pile : list) {
+                if (!pile.equals(card.getContainingPile()) &&
+                        isOverPile(card, pile) &&
+                        isMoveValid(card, pile))
+                    result = pile;
+            }
         }
         return result;
     }
