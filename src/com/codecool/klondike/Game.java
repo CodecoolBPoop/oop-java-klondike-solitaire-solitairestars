@@ -14,7 +14,10 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 public class Game extends Pane {
 
@@ -96,8 +99,8 @@ public class Game extends Pane {
     };
 
     public boolean isGameWon() {
-        if (foundationPiles.size() == 52) {
-            return true;
+        if (foundationPiles.size() == 52){
+                return true;
         }
         return false;
     }
@@ -109,6 +112,9 @@ public class Game extends Pane {
         initPiles();
         dealCards();
         addRestartButtonEventHandlers();
+
+        //System.out.println(stockPile.getCards());
+        //System.out.println(Card.isOppositeColor(stockPile.getCards().get(1), stockPile.getCards().get(30)));
 
     }
 
@@ -133,8 +139,7 @@ public class Game extends Pane {
         stockPile.setBlurredBackground();
         stockPile.setLayoutX(95);
         stockPile.setLayoutY(20);
-        stockPile.setOnMouseClicked
-                (stockReverseCardsHandler);
+        stockPile.setOnMouseClicked(stockReverseCardsHandler);
         getChildren().add(stockPile);
         deck = Card.createNewDeck();
         Collections.shuffle(deck);
@@ -166,7 +171,6 @@ public class Game extends Pane {
 
         }
     }
-
     public boolean isMoveValid(Card card, Pile destPile) {
 
         if (destPile.getPileType().equals(Pile.PileType.TABLEAU)) {
