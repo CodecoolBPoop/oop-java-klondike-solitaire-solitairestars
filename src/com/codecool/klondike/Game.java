@@ -98,13 +98,12 @@ public class Game extends Pane {
 
             Pile pile = getValidIntersectingPile(card, validPiles);
             Pile previousPile = card.getContainingPile();
-
+            int previousPilesCardNumber = previousPile.getCards().size();
 
             if (pile != null) {
 
-            if (previousPile.getCards().size() != 1 && previousPile.getPileType().equals(Pile.PileType.TABLEAU)){
+            if (previousPilesCardNumber != 1 && previousPile.getPileType().equals(Pile.PileType.TABLEAU)){
                 Card previousCard = previousPile.getBeforeTopCard();
-                Card previousFacedownCard;
 
                 if (!previousCard.isFaceDown()){
                     handleValidMove(card, pile);
@@ -208,6 +207,7 @@ public class Game extends Pane {
     }
     public boolean isMoveValid(Card card, Pile destPile) {
 
+
         if (destPile.getPileType().equals(Pile.PileType.TABLEAU)) {
 
             if (destPile.isEmpty() && card.getRank() == 13) {
@@ -230,7 +230,6 @@ public class Game extends Pane {
                 }
             }
             return false;
-
 
         }
 
