@@ -96,7 +96,7 @@ public class Game extends Pane {
         Card card = (Card) e.getSource();
         Pile activePile = card.getContainingPile();
 
-        if (card == activePile.getTopCard()) {
+        if (card == activePile.getTopCard() || !card.isFaceDown()){
 
             if (activePile.getPileType() == Pile.PileType.STOCK)
                 return;
